@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>SH Tech - File Uploader</title>
+    <title>PnY Squad - Image Uploader</title>
 
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -16,7 +16,7 @@
     <div class="navbar navbar-default navbar-static-top">
       <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" href="index.php">SH Tech - File Uploader</a>
+          <a class="navbar-brand" href="index.php">PnY Squad - Image Uploader</a>
         </div>
       </div>
     </div>
