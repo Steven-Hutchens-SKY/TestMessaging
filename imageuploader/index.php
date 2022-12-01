@@ -6,7 +6,7 @@
     <title>SH Tech - File Uploader</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="boostrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
    
   </head>
 
