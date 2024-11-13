@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trigger Webhook</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="d-flex flex-column align-items-center p-4">
+    <button onclick="callWebhook()" class="btn btn-primary mb-3">Trigger Webhook</button>
+    <p id="statusMessage" class="text-center"></p>
+    <script>
+        function callWebhook() {
+            fetch("https://prod-35.westeurope.logic.azure.com/workflows/5315b0e3fc1f42d9b9e341e5b05b0587/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V8XJKD0zm3p74d8gZhPK9ZLH7J31boOoifKjNq0tBso&Hey=Hey James", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "message": "Triggered from SharePoint" })
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('statusMessage').innerText = 'Webhook called successfully!';
+                    document.getElementById('statusMessage').classList.add('text-success');
+                } else {
+                    document.getElementById('statusMessage').innerText = 'Failed to call webhook: ' + response.statusText;
+                    document.getElementById('statusMessage').classList.add('text-danger');
+                }
+            })
+            .catch(error => {
+                document.getElementById('statusMessage').innerText = 'Error calling webhook: ' + error;
+                document.getElementById('statusMessage').classList.add('text-danger');
+            });
+        }
+    </script>
+</body>
+</html>
