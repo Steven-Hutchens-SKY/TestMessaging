@@ -11,13 +11,38 @@
     <button onclick="callWebhook()" class="btn btn-primary mb-3">Trigger Webhook</button>
     <p id="statusMessage" class="text-center"></p>
     <script>
-        function callWebhook() {
-            fetch("https://prod-35.westeurope.logic.azure.com/workflows/5315b0e3fc1f42d9b9e341e5b05b0587/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V8XJKD0zm3p74d8gZhPK9ZLH7J31boOoifKjNq0tBso&Hey=Hey James", {
+        // Function to fetch the user's email
+        async function getUserEmail() {
+            try {
+                const response = await fetch(`${_spPageContextInfo.webAbsoluteUrl}/_api/web/currentuser`, {
+                    headers: { 'Accept': 'application/json;odata=verbose' }
+                });
+                const data = await response.json();
+                return data.d.Email; // Return the email
+            } catch (error) {
+                console.error('Error fetching user email:', error);
+                return null;
+            }
+        }
+
+        // Function to call the webhook with the user’s email
+        async function callWebhook() {
+            const userEmail = await getUserEmail();
+            if (!userEmail) {
+                document.getElementById('statusMessage').innerText = 'Unable to retrieve user email';
+                document.getElementById('statusMessage').classList.add('text-danger');
+                return;
+            }
+
+            fetch("https://prod-35.westeurope.logic.azure.com/workflows/5315b0e3fc1f42d9b9e341e5b05b0587/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V8XJKD0zm3p74d8gZhPK9ZLH7J31boOoifKjNq0tBso", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ "message": "Triggered from SharePoint" })
+                body: JSON.stringify({
+                    "message": "Triggered from SharePoint",
+                    "userEmail": userEmail // Send the email as part of the payload
+                })
             })
             .then(response => {
                 if (response.ok) {
