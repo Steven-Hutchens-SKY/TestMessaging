@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trigger Webhook</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="d-flex flex-column align-items-center p-4">
+    <!-- Form for additional inputs -->
+    <form id="webhookForm" class="mb-3 w-50">
+        <div class="form-group">
+            <label for="userName">Name</label>
+            <input type="text" id="userName" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="userMessage">Message</label>
+            <textarea id="userMessage" class="form-control" rows="3" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="userDate">Date</label>
+            <input type="date" id="userDate" class="form-control" required>
+        </div>
+        <button type="button" onclick="callWebhook()" class="btn btn-primary">Submit</button>
+    </form>
+    <p id="statusMessage" class="text-center"></p>
+
+    <script>
+        // Function to call the webhook with the form data
+        function callWebhook() {
+            // Get form input values
+            const userName = document.getElementById('userName').value;
+            const userMessage = document.getElementById('userMessage').value;
+            const userDate = document.getElementById('userDate').value;
+
+            // Call the webhook with the collected data
+            fetch("https://prod-35.westeurope.logic.azure.com/workflows/5315b0e3fc1f42d9b9e341e5b05b0587/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=V8XJKD0zm3p74d8gZhPK9ZLH7J31boOoifKjNq0tBso", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "userName": userName,
+                    "userMessage": userMessage,
+                    "userDate": userDate
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('statusMessage').innerText = 'Webhook called successfully!';
+                    document.getElementById('statusMessage').classList.add('text-success');
+                } else {
+                    document.getElementById('statusMessage').innerText = 'Failed to call webhook: ' + response.statusText;
+                    document.getElementById('statusMessage').classList.add('text-danger');
+                }
+            })
+            .catch(error => {
+                document.getElementById('statusMessage').innerText = 'Error calling webhook: ' + error;
+                document.getElementById('statusMessage').classList.add('text-danger');
+            });
+        }
+    </script>
+</body>
+</html>
